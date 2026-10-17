@@ -1,0 +1,75 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TraceGraph analyzes Python tracebacks against project source code.">
+  <title>TraceGraph — Python traceback analysis</title>
+  <link rel="stylesheet" href="{% static 'investigations/app.css' %}">
+  <script src="{% static 'investigations/app.js' %}" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="TraceGraph home"><span class="brand-mark" aria-hidden="true">T</span>TraceGraph</a>
+    <span class="top-note">Python traceback analysis</span>
+  </header>
+
+  <main class="layout">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> DEBUGGING WORKSPACE</p>
+      <h1 id="page-title">Make sense of the <span>stack trace.</span></h1>
+      <p class="lede">TraceGraph follows a traceback into your project source, then returns validated evidence, a diagnosis, and practical next steps.</p>
+    </section>
+
+    <section class="workspace" aria-label="Traceback analyzer">
+      <form id="analyze-form" action="{% url 'analyze-investigation' %}" method="post">
+        {% csrf_token %}
+        <div class="form-heading">
+          <div><label for="repository">GitHub repository <span class="optional-label">optional</span></label><p>Analyze a public repository by URL or owner/repo. Leave blank to use the configured local source.</p></div>
+          <span class="input-hint">GITHUB</span>
+        </div>
+        <input id="repository" name="repository" type="text" maxlength="512" autocomplete="url" aria-describedby="repository-help" placeholder="owner/repo or https://github.com/owner/repo">
+        <span id="repository-help" class="sr-only">For private repositories, a server administrator must configure GITHUB_TOKEN.</span>
+        <div class="form-heading">
+          <div><label for="traceback">Python traceback</label><p>Paste the complete error output for the clearest result.</p></div>
+          <span class="input-hint">PYTHON</span>
+        </div>
+        <textarea id="traceback" name="traceback" rows="12" maxlength="50000" required spellcheck="false" aria-describedby="traceback-help char-count" placeholder="Traceback (most recent call last):&#10;  File &quot;app.py&quot;, line 42, in handle_request&#10;    result = process(data)&#10;ValueError: unexpected input"></textarea>
+        <span id="traceback-help" class="sr-only">Paste up to 50,000 characters of a Python traceback.</span>
+        <div class="form-footer">
+          <span id="char-count" class="char-count">0 / 50,000</span>
+          <div class="form-actions">
+            <button id="reset-button" class="secondary-button" type="button" hidden>New investigation</button>
+            <button id="submit-button" type="submit"><span>Analyze traceback</span><span aria-hidden="true">↗</span></button>
+          </div>
+        </div>
+      </form>
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <section id="processing" class="processing" aria-live="polite" aria-busy="false" hidden>
+        <div class="processing-heading">
+          <span class="spinner" aria-hidden="true"></span>
+          <div><strong id="processing-message">Analyzing traceback and gathering evidence…</strong><span class="processing-caption">The server reports the completed analysis when this request finishes.</span></div>
+        </div>
+        <progress class="indeterminate-progress" aria-label="Analysis request in progress"></progress>
+        <h2>Analysis workflow</h2>
+        <ol class="workflow-stages">
+          <li>Parsing traceback</li>
+          <li>Retrieving source evidence</li>
+          <li>Checking Graphify context</li>
+          <li>Generating diagnosis with Gemma</li>
+          <li>Validating evidence</li>
+          <li>Preparing investigation report</li>
+        </ol>
+      </section>
+    </section>
+
+    <section id="results" class="results" aria-label="Analysis results" aria-live="polite" hidden>
+      <div id="result-content"></div>
+    </section>
+
+      <p class="privacy-note"><span aria-hidden="true">⌁</span> Source reads stay within the configured project directory. Tracebacks and retrieved excerpts are sent to Google when Gemma is configured.</p>
+  </main>
+  <footer><span>TRACEGRAPH</span><span>Evidence first. Debug with confidence.</span></footer>
+</body>
+</html>
