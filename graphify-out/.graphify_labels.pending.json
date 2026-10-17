@@ -1,0 +1,18 @@
+{
+  "0": "os",
+  "1": "urls.py",
+  "2": "manage.py",
+  "3": "apps.py",
+  "4": "settings.py",
+  "5": "django_db",
+  "6": "django_shortcuts",
+  "7": "django_test",
+  "8": "main.py",
+  "9": "config/__init__.py",
+  "10": "investigations/__init__.py",
+  "11": "migrations/__init__.py",
+  "12": "services/__init__.py",
+  "13": "tests/__init__.py",
+  "14": "tracegraph",
+  "15": "README.md"
+}
